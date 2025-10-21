@@ -4,7 +4,7 @@
 %endif
 
 Name:           tuxedo-yt6801-kmod
-Version:        1.0.30tux2
+Version:        1.0.30tux4
 Release:        1%{?dist}
 Summary:        Tuxedo driver for NIC yt6801 as kmod
 

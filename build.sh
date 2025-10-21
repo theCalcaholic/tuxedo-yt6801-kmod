@@ -1,7 +1,7 @@
 #!/bin/sh
 # Build script for Tuxedo yt6801 driver
 # Builds: tuxedo-yt6801-kmod (for your kernel)
-set -ex
+set -eu
 
 # Check if the kernels parameter is provided, if not, default to uname -r
 if [ -z "$1" ]; then
