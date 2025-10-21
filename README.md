@@ -6,6 +6,31 @@ It has been successfully tested on Fedora Kinoite with secure boot enabled.
 
 ## Installation
 
+### With podman (preferred)
+
+```bash
+### Skip the first two commands if you have setup akmods already, don't need secure boot support or want to generate the keys inside of distrobox ###
+sudo rpm-ostree install akmods rpmdevtools
+sudo kmodgenca
+
+# Setup repository
+git clone https://github.com/theCalcaholic/tuxedo-yt6801-kmod
+cd tuxedo-yt6801-kmod
+
+# Build kmod in podman
+./tools/build_in_container.sh
+
+# The rpm is saved at $HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-*
+# For some reason I don't understand yet, there's a bogus dependency to "kmod-tuxedo-yt6801-common", which doesn't exist. A workaround is to rebuild the rpm pacakge without it:
+rpmrebuild --edit-spec --package "$HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-"*.rpm # Then remove the line that says `Requires: kmod-tuxedo-yt6801-common`, save and confirm.
+
+# Install the driver
+sudo rpm-ostree install "$HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-"*.rpm
+
+# Finally, reboot
+systemctl reboot
+```
+
 ### With distrobox
 
 ```bash
@@ -33,31 +58,6 @@ rpmrebuild --edit-spec --package "$HOME/rpmbuild/RPMs/<your-architecture>/kmod-t
 
 # Exit distrobox
 exit
-
-# Install the driver
-sudo rpm-ostree install "$HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-"*.rpm
-
-# Finally, reboot
-systemctl reboot
-```
-
-### With podman
-
-```bash
-### Skip the first two commands if you have setup akmods already, don't need secure boot support or want to generate the keys inside of distrobox ###
-sudo rpm-ostree install akmods rpmdevtools
-sudo kmodgenca
-
-# Setup repository
-git clone https://github.com/theCalcaholic/tuxedo-yt6801-kmod
-cd tuxedo-yt6801-kmod
-
-# Build kmod in podman
-./tools/build_in_container.sh
-
-# The rpm is saved at $HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-*
-# For some reason I don't understand yet, there's a bogus dependency to "kmod-tuxedo-yt6801-common", which doesn't exist. A workaround is to rebuild the rpm pacakge without it:
-rpmrebuild --edit-spec --package "$HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-"*.rpm # Then remove the line that says `Requires: kmod-tuxedo-yt6801-common`, save and confirm.
 
 # Install the driver
 sudo rpm-ostree install "$HOME/rpmbuild/RPMs/<your-architecture>/kmod-tuxedo-yt6801-"*.rpm
