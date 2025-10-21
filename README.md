@@ -15,9 +15,9 @@ sudo kmodgenca
 
 # Create a distrobox with all requirements. We use --root because we need to access the host akmods signing key. Skip, if you don't require secure boot support
 distrobox create --image fedora:42 --name kmod-builder --root \
-  --volume /etc/pki/akmods:/etc/pki/akmods:ro \
+  --volume /etc/pki/akmods:/etc/pki/akmods-host:ro \
   --additional-packages "kernel-devel rpmrebuild spectool kmodtool git rpmdevtools akmods nvim tree" \
-  --init-hooks 'dnf -y group install c-development development-tools && mkdir -p "/lib/modules/$(uname -r)" && ln -s "/usr/src/kernels/$(uname -r)" "/lib/modules/$(uname -r)/build"'
+  --init-hooks 'dnf -y group install c-development development-tools && mkdir -p "/lib/modules/$(uname -r)" && ln -s "/usr/src/kernels/$(uname -r)" "/lib/modules/$(uname -r)/build && rm -r /etc/pki/akmods && mv /etc/pki/akmods-host /etc/pki/akmods"'
 distrobox enter --root kmod-builder
 
 # Setup repository
